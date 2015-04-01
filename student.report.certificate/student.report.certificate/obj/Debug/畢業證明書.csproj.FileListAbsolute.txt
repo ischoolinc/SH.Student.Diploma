@@ -1,0 +1,6 @@
+C:\Users\Aaron\Desktop\huangwc_desktop\github\Report\student.report.certificate\student.report.certificate\obj\Debug\SH.Student.Diploma.MainForm.resources
+C:\Users\Aaron\Desktop\huangwc_desktop\github\Report\student.report.certificate\student.report.certificate\obj\Debug\SH.Student.Diploma.AddNew.resources
+C:\Users\Aaron\Desktop\huangwc_desktop\github\Report\student.report.certificate\student.report.certificate\obj\Debug\SH.Student.Diploma.Properties.Resources.resources
+C:\Users\Aaron\Desktop\huangwc_desktop\github\Report\student.report.certificate\student.report.certificate\obj\Debug\畢業證明書.csproj.GenerateResource.Cache
+C:\Users\Aaron\Desktop\huangwc_desktop\github\Report\student.report.certificate\student.report.certificate\obj\Debug\SH.Student.Diploma.dll
+C:\Users\Aaron\Desktop\huangwc_desktop\github\Report\student.report.certificate\student.report.certificate\obj\Debug\SH.Student.Diploma.pdb
