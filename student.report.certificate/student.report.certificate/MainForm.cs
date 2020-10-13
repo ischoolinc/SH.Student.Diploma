@@ -164,9 +164,32 @@ namespace SH.Student.Diploma
                 //畢業異動
                 if (dshurr.ContainsKey(sr.ID))
                 {
-                    int ExpectGraduateSchoolYear;
-                    if (int.TryParse(dshurr[sr.ID].ExpectGraduateSchoolYear, out ExpectGraduateSchoolYear))
-                        mailmerge["畢業異動西元年"] = ExpectGraduateSchoolYear + 1911;
+                    //int ExpectGraduateSchoolYear;
+                    //if (int.TryParse(dshurr[sr.ID].ExpectGraduateSchoolYear, out ExpectGraduateSchoolYear))
+                    //    mailmerge["畢業異動西元年"] = ExpectGraduateSchoolYear + 1911;
+
+                    if (!string.IsNullOrEmpty(dshurr[sr.ID].UpdateDate))
+                    {
+                        int ADYear;
+                        int.TryParse(dshurr[sr.ID].UpdateDate.Split('/')[0], out ADYear);
+                        mailmerge["畢業異動西元年"] = ADYear;
+                        int republicYaer;
+                        if (ADYear > 1911)
+                        {
+                            republicYaer = ADYear - 1911;
+                            mailmerge["畢業異動民國年"] = republicYaer;
+                        }
+
+                        int UpdateDateMonth;
+                        int.TryParse(dshurr[sr.ID].UpdateDate.Split('/')[1], out UpdateDateMonth);
+                        int UpdateDateDate;
+                        int.TryParse(dshurr[sr.ID].UpdateDate.Split('/')[2], out UpdateDateDate);
+
+                        mailmerge["畢業異動月"] = UpdateDateMonth;
+                        mailmerge["畢業異動日"] = UpdateDateDate;
+                    }
+
+
                     mailmerge["畢業異動學年度"] = dshurr[sr.ID].ExpectGraduateSchoolYear;
                     mailmerge["畢業異動證書字號"] = dshurr[sr.ID].GraduateCertificateNumber;
                     mailmerge["畢業異動證書字號數字"] = getCertificateNumberNumber(dshurr[sr.ID].GraduateCertificateNumber);
