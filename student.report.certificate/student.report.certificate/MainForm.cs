@@ -89,9 +89,9 @@ namespace SH.Student.Diploma
                 }
             }
             Dictionary<string, object> mailmerge = new Dictionary<string, object>();
-            string 校內字號 = textBoxX1.Text,校內字號英文 = textBoxX2.Text,校長姓名="",校長姓名英文="";
+            string 校內字號 = textBoxX1.Text, 校內字號英文 = textBoxX2.Text, 校長姓名 = "", 校長姓名英文 = "";
             if (K12.Data.School.Configuration["學校資訊"] != null && K12.Data.School.Configuration["學校資訊"].PreviousData.SelectSingleNode("ChancellorChineseName") != null)
-                校長姓名 =  K12.Data.School.Configuration["學校資訊"].PreviousData.SelectSingleNode("ChancellorChineseName").InnerText;
+                校長姓名 = K12.Data.School.Configuration["學校資訊"].PreviousData.SelectSingleNode("ChancellorChineseName").InnerText;
             if (K12.Data.School.Configuration["學校資訊"] != null && K12.Data.School.Configuration["學校資訊"].PreviousData.SelectSingleNode("ChancellorChineseName") != null)
                 校長姓名英文 = K12.Data.School.Configuration["學校資訊"].PreviousData.SelectSingleNode("ChancellorEnglishName").InnerText;
             Document each;
@@ -120,15 +120,16 @@ namespace SH.Student.Diploma
                 mailmerge.Add("學生姓名", sr.Name);
                 mailmerge.Add("學生英文姓名", sr.EnglishName);
                 mailmerge.Add("學生身分證號", sr.IDNumber);
-                SHClassRecord tmpcr ;
-                if ((tmpcr=sr.Class) != null)
+                mailmerge.Add("學生目前學號", sr.StudentNumber);
+                SHClassRecord tmpcr;
+                if ((tmpcr = sr.Class) != null)
                 {
                     mailmerge.Add("學生目前班級", tmpcr.Name);
                     mailmerge.Add("學生目前年級", tmpcr.GradeYear);
                     if (tmpcr.Department != null)
                         mailmerge.Add("學生目前科別", tmpcr.Department.Name);
                 }
-                mailmerge.Add("學生目前座號", sr.StudentNumber);
+                mailmerge.Add("學生目前座號", sr.SeatNo);
                 if (sr.Birthday.HasValue)
                 {
                     mailmerge.Add("學生生日民國年", sr.Birthday.Value.Year - 1911);
@@ -187,6 +188,9 @@ namespace SH.Student.Diploma
 
                         mailmerge["畢業異動月"] = UpdateDateMonth;
                         mailmerge["畢業異動日"] = UpdateDateDate;
+
+                        mailmerge["畢業異動英文月"] = ToEngMonth(UpdateDateMonth);
+                        mailmerge["畢業異動日上標"] = daySuffix(UpdateDateDate.ToString());
                     }
 
 
@@ -394,7 +398,6 @@ namespace SH.Student.Diploma
                     //第一次使用時加入
                     if (custConfigs.Count == 0)
                     {
-                        
                         addCustConfig("畢業證書_普通高中");
                         ReportConfiguration custConf;
                         custConf = new Campus.Report.ReportConfiguration(configNameRule("畢業證書_普通高中"));
@@ -441,7 +444,7 @@ namespace SH.Student.Diploma
                             {
                                 ReportConfiguration tmp_conf = new ReportConfiguration(configNameRule(input.name));
                                 if (input.Template != null)
-                                    tmp_conf.Template = new ReportTemplate(input.Template,TemplateType.Word);
+                                    tmp_conf.Template = new ReportTemplate(input.Template, TemplateType.Word);
                                 tmp_conf.Save();
                                 custConfigs.Add(input.name, tmp_conf);
                                 addCustConfig(input.name);
@@ -504,12 +507,49 @@ namespace SH.Student.Diploma
         }
         public static string daySuffix(string date)
         {
-            switch (int.Parse(date) % 10)
+            //switch (int.Parse(date) % 10)
+            //{
+            //    case 1: return "st";
+            //    case 2: return "nd";
+            //    case 3: return "rd";
+            //    default: return "th";
+            //}
+
+            //2022-05-25 Cynthia 11、12、13應是th
+            switch (int.Parse(date))
             {
                 case 1: return "st";
                 case 2: return "nd";
                 case 3: return "rd";
+
+                case 21: return "st";
+                case 22: return "nd";
+                case 23: return "rd";
+
+                case 31: return "st";
+
                 default: return "th";
+            }
+        }
+
+        public static string ToEngMonth(int month)
+        {
+            switch (month)
+            {
+                case 1: return "January";
+                case 2: return "February";
+                case 3: return "March";
+                case 4: return "April";
+                case 5: return "May";
+                case 6: return "June";
+                case 7: return "July";
+                case 8: return "August";
+                case 9: return "September";
+                case 10: return "October";
+                case 11: return "November";
+                case 12: return "December";
+
+                default: return "";
             }
         }
         public static string getCertificateNumberNumber(string cn)
