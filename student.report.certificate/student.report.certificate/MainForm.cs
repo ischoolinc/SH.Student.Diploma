@@ -11,7 +11,7 @@ using System.Xml;
 
 using Aspose.Words;
 using Aspose.Words.Drawing;
-using Campus.Report;
+using Campus.Report2014;
 using K12.Data;
 using SHSchool.Data;
 using System.IO;
@@ -24,7 +24,7 @@ namespace SH.Student.Diploma
 
         private const string config = "plugins.student.report.certificate.huangwc.config";
         private Dictionary<string, ReportConfiguration> custConfigs = new Dictionary<string, ReportConfiguration>();
-        ReportConfiguration conf = new Campus.Report.ReportConfiguration(config);
+        ReportConfiguration conf = new Campus.Report2014.ReportConfiguration(config);
         public string current = "";
 
         public MainForm()
@@ -52,7 +52,7 @@ namespace SH.Student.Diploma
             Document document = new Document();
             Byte[] template = (custConfigs[current].Template != null) //單頁範本
                  ? custConfigs[current].Template.ToBinary()
-                 : new Campus.Report.ReportTemplate(Properties.Resources.證明書範本, Campus.Report.TemplateType.Word).ToBinary();
+                 : new Campus.Report2014.ReportTemplate(Properties.Resources.證明書範本, Campus.Report2014.TemplateType.docx).ToBinary();
             List<string> ids = K12.Presentation.NLDPanels.Student.SelectedSource;
 
 
@@ -61,6 +61,10 @@ namespace SH.Student.Diploma
             Dictionary<string, SHLeaveInfoRecord> dshlir = SHLeaveInfo.SelectByStudentIDs(ids).ToDictionary(x => x.RefStudentID, x => x);
             //畢業異動
             Dictionary<string, SHUpdateRecordRecord> dshurr = new Dictionary<string, SHUpdateRecordRecord>();
+
+            // 新生與轉入異動，主要取得入學年
+            Dictionary<string, SHUpdateRecordRecord> dsEntryRceDict = new Dictionary<string, SHUpdateRecordRecord>();
+
             foreach (SHUpdateRecordRecord shurr in SHUpdateRecord.SelectByStudentIDs(ids))
             {
                 if (shurr.UpdateCode == "501")
@@ -73,6 +77,27 @@ namespace SH.Student.Diploma
                         }
                     }
                     else dshurr.Add(shurr.StudentID, shurr);
+                }
+
+                int intCode;
+                if (int.TryParse(shurr.UpdateCode, out intCode))
+                {
+                    // 新生或轉入相關異動
+                    if (intCode < 200)
+                    {
+                        if (dsEntryRceDict.ContainsKey(shurr.StudentID))
+                        {
+                            DateTime dt1, dt2;
+                            DateTime.TryParse(shurr.UpdateDate, out dt1);
+                            DateTime.TryParse(dsEntryRceDict[shurr.StudentID].UpdateDate, out dt2);
+                            if (dt1 > dt2)
+                            {
+                                dsEntryRceDict[shurr.StudentID] = shurr;
+                            }
+                        }
+                        else
+                            dsEntryRceDict.Add(shurr.StudentID, shurr);
+                    }
                 }
             }
             //入學照片
@@ -94,6 +119,7 @@ namespace SH.Student.Diploma
                 校長姓名 = K12.Data.School.Configuration["學校資訊"].PreviousData.SelectSingleNode("ChancellorChineseName").InnerText;
             if (K12.Data.School.Configuration["學校資訊"] != null && K12.Data.School.Configuration["學校資訊"].PreviousData.SelectSingleNode("ChancellorChineseName") != null)
                 校長姓名英文 = K12.Data.School.Configuration["學校資訊"].PreviousData.SelectSingleNode("ChancellorEnglishName").InnerText;
+
             Document each;
             foreach (SHStudentRecord sr in srl)
             {
@@ -127,7 +153,14 @@ namespace SH.Student.Diploma
                     mailmerge.Add("學生目前班級", tmpcr.Name);
                     mailmerge.Add("學生目前年級", tmpcr.GradeYear);
                     if (tmpcr.Department != null)
+                    {
                         mailmerge.Add("學生目前科別", tmpcr.Department.Name);
+                        if (dic_dept_ch_en.ContainsKey(tmpcr.Department.Name))
+                            mailmerge.Add("科別英文名稱", dic_dept_ch_en[tmpcr.Department.Name]);
+                        else
+                            mailmerge.Add("科別英文名稱", "");
+                    }
+
                 }
                 mailmerge.Add("學生目前座號", sr.SeatNo);
                 if (sr.Birthday.HasValue)
@@ -162,6 +195,18 @@ namespace SH.Student.Diploma
                     mailmerge["畢業資訊科別英文"] = (tmp_dept != null && dic_dept_ch_en.ContainsKey(tmp_dept)) ? dic_dept_ch_en[tmp_dept] : "";
 
                 }
+
+                // 入學學年
+                if (dsEntryRceDict.ContainsKey(sr.ID))
+                {
+                    DateTime dt;
+                    if (DateTime.TryParse(dsEntryRceDict[sr.ID].UpdateDate, out dt))
+                    {
+                        if (dt.Year > 1911)
+                            mailmerge["入學西元年"] = dt.Year;
+                    }
+                }
+
                 //畢業異動
                 if (dshurr.ContainsKey(sr.ID))
                 {
@@ -313,7 +358,7 @@ namespace SH.Student.Diploma
             {
                 SaveFileDialog SaveFileDialog1 = new SaveFileDialog();
 
-                SaveFileDialog1.Filter = "Word (*.doc)|*.doc|所有檔案 (*.*)|*.*";
+                SaveFileDialog1.Filter = "Word (*.docx)|*.docx|所有檔案 (*.*)|*.*";
                 SaveFileDialog1.FileName = current;
 
                 if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
@@ -344,31 +389,31 @@ namespace SH.Student.Diploma
             string value = (string)comboBoxEx1.SelectedItem;
             if (value == "新增") return;
             //畫面內容(範本內容,預設樣式
-            Campus.Report.TemplateSettingForm TemplateForm;
+            Campus.Report2014.TemplateSettingForm TemplateForm;
             if (custConfigs[current].Template == null)
             {
-                custConfigs[current].Template = new Campus.Report.ReportTemplate(Properties.Resources.證明書範本, Campus.Report.TemplateType.Word);
+                custConfigs[current].Template = new Campus.Report2014.ReportTemplate(Properties.Resources.證明書範本, Campus.Report2014.TemplateType.docx);
             }
-            Campus.Report.ReportTemplate defaultDoc;
+            Campus.Report2014.ReportTemplate defaultDoc;
             switch (value)
             {
                 case "畢業證書_普通高中":
-                    defaultDoc = new Campus.Report.ReportTemplate(Properties.Resources.畢業證書_普通高中, Campus.Report.TemplateType.Word);
+                    defaultDoc = new Campus.Report2014.ReportTemplate(Properties.Resources.畢業證書_普通高中, Campus.Report2014.TemplateType.docx);
                     break;
                 case "畢業證書_高職":
-                    defaultDoc = new Campus.Report.ReportTemplate(Properties.Resources.畢業證書_高職, Campus.Report.TemplateType.Word);
+                    defaultDoc = new Campus.Report2014.ReportTemplate(Properties.Resources.畢業證書_高職, Campus.Report2014.TemplateType.docx);
                     break;
                 case "補發證明書_普通高中":
-                    defaultDoc = new Campus.Report.ReportTemplate(Properties.Resources.補發證明書_普通高中, Campus.Report.TemplateType.Word);
+                    defaultDoc = new Campus.Report2014.ReportTemplate(Properties.Resources.補發證明書_普通高中, Campus.Report2014.TemplateType.docx);
                     break;
                 case "補發證明書_高職":
-                    defaultDoc = new Campus.Report.ReportTemplate(Properties.Resources.補發證明書_高職, Campus.Report.TemplateType.Word);
+                    defaultDoc = new Campus.Report2014.ReportTemplate(Properties.Resources.補發證明書_高職, Campus.Report2014.TemplateType.docx);
                     break;
                 default:
-                    defaultDoc = new Campus.Report.ReportTemplate(Properties.Resources.證明書範本, Campus.Report.TemplateType.Word);
+                    defaultDoc = new Campus.Report2014.ReportTemplate(Properties.Resources.證明書範本, Campus.Report2014.TemplateType.docx);
                     break;
             }
-            TemplateForm = new Campus.Report.TemplateSettingForm(custConfigs[current].Template, defaultDoc);
+            TemplateForm = new Campus.Report2014.TemplateSettingForm(custConfigs[current].Template, defaultDoc);
             //預設名稱
             TemplateForm.DefaultFileName = current + "樣板";
             if (TemplateForm.ShowDialog() == DialogResult.OK)
@@ -400,29 +445,29 @@ namespace SH.Student.Diploma
                     {
                         addCustConfig("畢業證書_普通高中");
                         ReportConfiguration custConf;
-                        custConf = new Campus.Report.ReportConfiguration(configNameRule("畢業證書_普通高中"));
-                        custConf.Template = new Campus.Report.ReportTemplate(Properties.Resources.畢業證書_普通高中, Campus.Report.TemplateType.Word);
+                        custConf = new Campus.Report2014.ReportConfiguration(configNameRule("畢業證書_普通高中"));
+                        custConf.Template = new Campus.Report2014.ReportTemplate(Properties.Resources.畢業證書_普通高中, Campus.Report2014.TemplateType.docx);
                         custConf.Save();
                         custConfigs.Add("畢業證書_普通高中", custConf);
                         comboBoxEx1.Items.Insert(0, "畢業證書_普通高中");
 
                         addCustConfig("畢業證書_高職");
-                        custConf = new Campus.Report.ReportConfiguration(configNameRule("畢業證書_高職"));
-                        custConf.Template = new Campus.Report.ReportTemplate(Properties.Resources.畢業證書_高職, Campus.Report.TemplateType.Word);
+                        custConf = new Campus.Report2014.ReportConfiguration(configNameRule("畢業證書_高職"));
+                        custConf.Template = new Campus.Report2014.ReportTemplate(Properties.Resources.畢業證書_高職, Campus.Report2014.TemplateType.docx);
                         custConf.Save();
                         custConfigs.Add("畢業證書_高職", custConf);
                         comboBoxEx1.Items.Insert(0, "畢業證書_高職");
 
                         addCustConfig("補發證明書_普通高中");
-                        custConf = new Campus.Report.ReportConfiguration(configNameRule("補發證明書_普通高中"));
-                        custConf.Template = new Campus.Report.ReportTemplate(Properties.Resources.補發證明書_普通高中, Campus.Report.TemplateType.Word);
+                        custConf = new Campus.Report2014.ReportConfiguration(configNameRule("補發證明書_普通高中"));
+                        custConf.Template = new Campus.Report2014.ReportTemplate(Properties.Resources.補發證明書_普通高中, Campus.Report2014.TemplateType.docx);
                         custConf.Save();
                         custConfigs.Add("補發證明書_普通高中", custConf);
                         comboBoxEx1.Items.Insert(0, "補發證明書_普通高中");
 
                         addCustConfig("補發證明書_高職");
-                        custConf = new Campus.Report.ReportConfiguration(configNameRule("補發證明書_高職"));
-                        custConf.Template = new Campus.Report.ReportTemplate(Properties.Resources.補發證明書_高職, Campus.Report.TemplateType.Word);
+                        custConf = new Campus.Report2014.ReportConfiguration(configNameRule("補發證明書_高職"));
+                        custConf.Template = new Campus.Report2014.ReportTemplate(Properties.Resources.補發證明書_高職, Campus.Report2014.TemplateType.docx);
                         custConf.Save();
                         custConfigs.Add("補發證明書_高職", custConf);
                         comboBoxEx1.Items.Insert(0, "補發證明書_高職");
@@ -444,7 +489,7 @@ namespace SH.Student.Diploma
                             {
                                 ReportConfiguration tmp_conf = new ReportConfiguration(configNameRule(input.name));
                                 if (input.Template != null)
-                                    tmp_conf.Template = new ReportTemplate(input.Template, TemplateType.Word);
+                                    tmp_conf.Template = new ReportTemplate(input.Template, TemplateType.docx);
                                 tmp_conf.Save();
                                 custConfigs.Add(input.name, tmp_conf);
                                 addCustConfig(input.name);
@@ -581,7 +626,7 @@ namespace SH.Student.Diploma
             try
             {
                 SaveFileDialog SaveFileDialog1 = new SaveFileDialog();
-                SaveFileDialog1.Filter = "Word (*.doc)|*.doc|所有檔案 (*.*)|*.*";
+                SaveFileDialog1.Filter = "Word (*.docx)|*.docx|所有檔案 (*.*)|*.*";
                 SaveFileDialog1.FileName = ll.Text.Replace("檢視", "");
                 if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
                 {

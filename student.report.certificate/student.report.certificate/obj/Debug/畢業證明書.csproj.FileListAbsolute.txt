@@ -4,3 +4,13 @@ C:\Users\Aaron\Desktop\huangwc_desktop\github\Report\student.report.certificate\
 C:\Users\Aaron\Desktop\huangwc_desktop\github\Report\student.report.certificate\student.report.certificate\obj\Debug\畢業證明書.csproj.GenerateResource.Cache
 C:\Users\Aaron\Desktop\huangwc_desktop\github\Report\student.report.certificate\student.report.certificate\obj\Debug\SH.Student.Diploma.dll
 C:\Users\Aaron\Desktop\huangwc_desktop\github\Report\student.report.certificate\student.report.certificate\obj\Debug\SH.Student.Diploma.pdb
+C:\ischoolProject\SH.Student.Diploma\student.report.certificate\student.report.certificate\obj\Debug\畢業證明書.csproj.AssemblyReference.cache
+C:\ischoolProject\SH.Student.Diploma\student.report.certificate\student.report.certificate\obj\Debug\SH.Student.Diploma.MainForm.resources
+C:\ischoolProject\SH.Student.Diploma\student.report.certificate\student.report.certificate\obj\Debug\SH.Student.Diploma.AddNew.resources
+C:\ischoolProject\SH.Student.Diploma\student.report.certificate\student.report.certificate\obj\Debug\SH.Student.Diploma.Properties.Resources.resources
+C:\ischoolProject\SH.Student.Diploma\student.report.certificate\student.report.certificate\obj\Debug\畢業證明書.csproj.GenerateResource.cache
+C:\ischoolProject\SH.Student.Diploma\student.report.certificate\student.report.certificate\obj\Debug\畢業證明書.csproj.CoreCompileInputs.cache
+C:\ischoolProject\SH.Student.Diploma\student.report.certificate\student.report.certificate\obj\Debug\畢業證明書.csproj.CopyComplete
+C:\ischoolProject\SH.Student.Diploma\student.report.certificate\student.report.certificate\obj\Debug\SH.Student.Diploma.dll
+C:\ischoolProject\SH.Student.Diploma\student.report.certificate\student.report.certificate\obj\Debug\SH.Student.Diploma.pdb
+C:\ischoolProject\SH.Student.Diploma\student.report.certificate\student.report.certificate\obj\Debug\DevComponents.DotNetBar2.dll
