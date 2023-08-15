@@ -147,6 +147,8 @@ namespace SH.Student.Diploma
                 mailmerge.Add("學生英文姓名", sr.EnglishName);
                 mailmerge.Add("學生身分證號", sr.IDNumber);
                 mailmerge.Add("學生目前學號", sr.StudentNumber);
+                mailmerge.Add("性別", sr.Gender);
+
                 SHClassRecord tmpcr;
                 if ((tmpcr = sr.Class) != null)
                 {

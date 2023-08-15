@@ -45,7 +45,7 @@
             // 
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.linkLabel1.Font = new System.Drawing.Font("微軟正黑體", 9.75F);
+            this.linkLabel1.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F);
             this.linkLabel1.Location = new System.Drawing.Point(323, 15);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(34, 17);
@@ -59,7 +59,7 @@
             this.btnExit.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
             this.btnExit.BackColor = System.Drawing.Color.Transparent;
             this.btnExit.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnExit.Font = new System.Drawing.Font("微軟正黑體", 9.75F);
+            this.btnExit.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F);
             this.btnExit.Location = new System.Drawing.Point(317, 106);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(75, 23);
@@ -76,7 +76,7 @@
             // 
             this.labelX1.BackgroundStyle.Class = "";
             this.labelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX1.Font = new System.Drawing.Font("微軟正黑體", 9.75F);
+            this.labelX1.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F);
             this.labelX1.Location = new System.Drawing.Point(12, 12);
             this.labelX1.Name = "labelX1";
             this.labelX1.Size = new System.Drawing.Size(87, 21);
@@ -88,7 +88,7 @@
             this.btnPrint.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
             this.btnPrint.BackColor = System.Drawing.Color.Transparent;
             this.btnPrint.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnPrint.Font = new System.Drawing.Font("微軟正黑體", 9.75F);
+            this.btnPrint.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F);
             this.btnPrint.Location = new System.Drawing.Point(236, 106);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(75, 23);
@@ -166,7 +166,7 @@
             // 
             this.labelX2.BackgroundStyle.Class = "";
             this.labelX2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX2.Font = new System.Drawing.Font("微軟正黑體", 9.75F);
+            this.labelX2.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F);
             this.labelX2.Location = new System.Drawing.Point(12, 44);
             this.labelX2.Name = "labelX2";
             this.labelX2.Size = new System.Drawing.Size(60, 21);
@@ -182,7 +182,7 @@
             // 
             this.labelX3.BackgroundStyle.Class = "";
             this.labelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX3.Font = new System.Drawing.Font("微軟正黑體", 9.75F);
+            this.labelX3.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F);
             this.labelX3.Location = new System.Drawing.Point(12, 74);
             this.labelX3.Name = "labelX3";
             this.labelX3.Size = new System.Drawing.Size(87, 21);
@@ -207,7 +207,7 @@
             this.Controls.Add(this.btnPrint);
             this.DoubleBuffered = true;
             this.Name = "MainForm";
-            this.Text = "Title";
+            this.Text = "";
             this.ResumeLayout(false);
             this.PerformLayout();
 
